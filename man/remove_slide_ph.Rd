@@ -26,6 +26,9 @@ mentioned in error messages as the source of the error. See the
 
 \item{verbose}{inform about the removed placeholders}
 }
+\value{
+Returns the modified \code{pptx} object (of class \code{pptx_container}) with the placeholder removed from the slide.
+}
 \description{
 Remove placeholder from a slide
 }

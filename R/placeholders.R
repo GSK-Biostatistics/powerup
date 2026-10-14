@@ -378,6 +378,8 @@ select_ph_tie_breaker <- function(df, tie_breaker = c("largest", "smallest", "le
 #' @param index index of slide
 #' @param verbose inform about the removed placeholders
 #' @inheritParams rlang::args_error_context
+#' 
+#' @returns Returns the modified \code{pptx} object (of class \code{pptx_container}) with the placeholder removed from the slide.
 #'
 #' @examples
 #' pptx <- load_pptx() |>
@@ -562,23 +564,25 @@ print.placeholder_tbl <- function(x, ...) {
 
   fmt <- format(tbl, n = NULL)
 
-  writeLines(cli::col_silver(sub("origin", "", fmt[2])))
+  output_content <- format(
+    cli::col_silver(sub("origin", "", fmt[2]))
+  )
 
   from_slide <- grep("slide $", fmt, value = TRUE)
   from_slide <- sub("slide $", "", from_slide)
   if (length(from_slide)) {
-    writeLines("")
-    cli_rule("From slide")
-    writeLines(from_slide)
+    output_content <- c(output_content, "",     cli_fmt(cli_rule("From slide")))
+    output_content <- c(output_content, format(from_slide))
   }
 
   from_layout <- grep("layout$", fmt, value = TRUE)
   from_layout <- sub("layout$", "", from_layout)
   if (length(from_layout)) {
-    writeLines("")
-    cli_rule("From layout {.val {layout}}")
-    writeLines(from_layout)
+    output_content <- c(output_content, "",     cli_fmt(cli_rule("From layout {.val {layout}}")))
+    output_content <- c(output_content, format(from_layout))
   }
+
+  cat(output_content, sep = "\n")
 
   invisible(x)
 }
