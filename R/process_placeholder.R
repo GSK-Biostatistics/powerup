@@ -48,7 +48,7 @@ make_ph_shape <- function(ph, pptx){
 #' Internal method for processing placeholder requests
 #'
 #' @param ph placeholder
-#' @inheritParams args_powerup
+#' @param pptx A PowerPoint wrapped in a <pptx_container> object. see [load_pptx()]
 #' @param index Slide number
 #' @inheritParams rlang::args_dots_empty
 #' @inheritParams rlang::args_error_context

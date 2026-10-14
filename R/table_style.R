@@ -2,7 +2,7 @@
 #'
 #' List the available table styles within the document
 #'
-#' @inheritParams args_powerup
+#' @param pptx A PowerPoint wrapped in a <pptx_container> object. see [load_pptx()]
 #'
 #' @examples
 #' pptx <- example_pptx()
@@ -36,7 +36,7 @@ get_table_styles <- function(pptx){
 #' this makes it available to tables that get added to the PowerPoint as a table
 #' style option
 #'
-#' @inheritParams args_powerup
+#' @param pptx A PowerPoint wrapped in a <pptx_container> object. see [load_pptx()]
 #' @inheritParams rlang::args_error_context
 #' @param table_style an xml_node that defines a tblStyle. Created by [new_table_style()].
 #' @param verbose if TRUE, some information is [cli::cli_inform()]ed along the way

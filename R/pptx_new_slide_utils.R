@@ -11,7 +11,7 @@
 #' `delete_slide()` deletes the slide based on the index.
 #'
 #'
-#' @inheritParams args_powerup
+#' @param pptx A PowerPoint wrapped in a <pptx_container> object. see [load_pptx()]
 #' @param layout slide layout to use when creating a slide in `add_slide()`
 #' @param ... content objects created with [content()]
 #' @param index slide index. By default `add_slide()` creates a new slide at the
@@ -27,43 +27,43 @@
 #' @inheritParams rlang::args_error_context
 #' @param verbose if TRUE, some information is [cli::cli_inform()]ed along the
 #'   way
-#' 
+#'
 #' @examples
-#' 
+#'
 #' library(powerup)
-#' 
+#'
 #' ## Create a new presentation
 #' ppt <- load_pptx()
-#' 
+#'
 #' ## adding new slides
 #' ppt <- ppt |>
 #'   ## add first slide with content in title
-#'   add_slide(layout = "Title and Content", 
+#'   add_slide(layout = "Title and Content",
 #'     content("hello world", ph = ph_title())
 #'   ) |>
 #'   ## add another slide with nothing on it yet
-#'   add_slide(layout = "Title and Content") |> 
+#'   add_slide(layout = "Title and Content") |>
 #'   ## slide added at index 2 with content in title and body
-#'   add_slide(layout = "Title and Content", 
-#'     index = 2, 
-#'     content("Hello World", ph = ph_title()), 
+#'   add_slide(layout = "Title and Content",
+#'     index = 2,
+#'     content("Hello World", ph = ph_title()),
 #'     content("This is a body", ph = ph_body())
 #'   )
-#'  
+#'
 #' ## updating an existing slide wit new content
 #' ppt <- ppt |>
-#'    update_slide(index = 1, 
+#'    update_slide(index = 1,
 #'      content("This placeholder now has a value", ph = ph_body())
 #'    )
-#' 
+#'
 #' ## moving a slide from index 2 to index 1
 #' ppt <- ppt |>
 #'    move_slide(index = 2, to = 1)
-#' 
+#'
 #' ## deleting a slide at index 3
 #' ppt <- ppt |>
 #'    delete_slide(index = 3)
-#' 
+#'
 #' @return a `pptx_container` object with the slide added, updated, moved, or deleted
 #'
 #' @export
