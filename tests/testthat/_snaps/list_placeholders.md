@@ -24,9 +24,7 @@
     Output
         ph_label                   type     `x (in)`      `y (in)`      
       
-    Message
       -- From layout "Title Slide" ---------------------------------------------------
-    Output
       1 Date Placeholder 3         dt       [0.50 - 2.83] [6.95 - 7.35] 
       2 Footer Placeholder 4       ftr      [3.42 - 6.58] [6.95 - 7.35] 
       3 Slide Number Placeholder 5 sldNum   [7.17 - 9.50] [6.95 - 7.35] 
@@ -40,9 +38,7 @@
     Output
         ph_label                   type     `x (in)`      `y (in)`      
       
-    Message
       -- From layout "Title Slide" ---------------------------------------------------
-    Output
       1 Date Placeholder 3         dt       [0.50 - 2.83] [6.95 - 7.35] 
       2 Footer Placeholder 4       ftr      [3.42 - 6.58] [6.95 - 7.35] 
       3 Slide Number Placeholder 5 sldNum   [7.17 - 9.50] [6.95 - 7.35] 
@@ -56,14 +52,10 @@
     Output
         ph_label                   type   `x (in)`      `y (in)`      
       
-    Message
       -- From slide ------------------------------------------------------------------
-    Output
       1 Content Placeholder 2      body   [0.50 - 9.50] [1.75 - 6.70] 
       
-    Message
       -- From layout "Title and Content" ---------------------------------------------
-    Output
       2 Date Placeholder 3         dt     [0.50 - 2.83] [6.95 - 7.35] 
       3 Footer Placeholder 4       ftr    [3.42 - 6.58] [6.95 - 7.35] 
       4 Slide Number Placeholder 5 sldNum [7.17 - 9.50] [6.95 - 7.35] 
@@ -76,15 +68,11 @@
     Output
         ph_label                   type   `x (in)`      `y (in)`      
       
-    Message
       -- From slide ------------------------------------------------------------------
-    Output
       1 my new left label          body   [0.50 - 4.92] [1.75 - 6.70] 
       2 my new right label         body   [5.08 - 9.50] [1.75 - 6.70] 
       
-    Message
       -- From layout "Two Content" ---------------------------------------------------
-    Output
       3 Date Placeholder 4         dt     [0.50 - 2.83] [6.95 - 7.35] 
       4 Footer Placeholder 5       ftr    [3.42 - 6.58] [6.95 - 7.35] 
       5 Slide Number Placeholder 6 sldNum [7.17 - 9.50] [6.95 - 7.35] 
@@ -97,9 +85,7 @@
     Output
         ph_label                   type   `x (in)`      `y (in)`      
       
-    Message
       -- From layout "Comparison" ----------------------------------------------------
-    Output
       1 Content Placeholder 3      body   [0.50 - 4.92] [2.38 - 6.70] 
       2 Content Placeholder 5      body   [5.08 - 9.50] [2.38 - 6.70] 
       3 Date Placeholder 6         dt     [0.50 - 2.83] [6.95 - 7.35] 
@@ -116,14 +102,10 @@
     Output
         ph_label                   type   `x (in)`      `y (in)`      
       
-    Message
       -- From slide ------------------------------------------------------------------
-    Output
       1 Content Placeholder 2      body   [0.50 - 9.50] [1.75 - 6.70] 
       
-    Message
       -- From layout "Title and Content" ---------------------------------------------
-    Output
       2 Date Placeholder 3         dt     [0.50 - 2.83] [6.95 - 7.35] 
       3 Footer Placeholder 4       ftr    [3.42 - 6.58] [6.95 - 7.35] 
       4 Slide Number Placeholder 5 sldNum [7.17 - 9.50] [6.95 - 7.35] 
