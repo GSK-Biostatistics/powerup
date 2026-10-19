@@ -39,5 +39,8 @@ utils::globalVariables(
 #'
 #' @param pptx A PowerPoint wrapped in a <pptx_container> object. see [load_pptx()]
 #'
-#' @name args_powerup
+#' @rdname args_powerup
+#' @usage N/A - This documentation anchor is not intended to be called directly.
+#' @keywords internal
+#' @noRd
 NULL
