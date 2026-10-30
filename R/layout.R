@@ -8,6 +8,27 @@
 #' @param only_layout if TRUE only extract placeholders from the layout, i.e. not occupied in the slide
 #' @param keep_all if FALSE, only keep non missing placeholders
 #'
+#' @return
+#' A tibble with columns describing the placeholders:
+#'   \item{slide_index}{numeric; slide index}
+#'   \item{slide_file}{character; basename of the slide file}
+#'   \item{layout_file}{character; basename of the layout file}
+#'   \item{layout_name}{character; name of the layout}
+#'   \item{id}{character; placeholder id}
+#'   \item{offx}{numeric; x offset in inches}
+#'   \item{offy}{numeric; y offset in inches}
+#'   \item{cx}{numeric; width in inches}
+#'   \item{cy}{numeric; height in inches}
+#'   \item{ph_type}{character; placeholder type}
+#'   \item{ph}{character; placeholder XML node as glue object}
+#'   \item{ph_id}{character; placeholder idx attribute}
+#'   \item{slide_ph_name}{character; placeholder name from slide}
+#'   \item{slide_ph_id}{character; placeholder id from slide}
+#'   \item{layout_ph_name}{character; placeholder name from layout}
+#'   \item{metadata}{list; metadata extracted from placeholder}
+#'
+#' The tibble has a \code{dimensions} attribute containing the slide size.
+#'
 #' @examples
 #' ppt <- example_pptx()
 #' read_slide_placeholders(ppt)
@@ -140,10 +161,27 @@ replace_ph_id_na <- function(data, prefix = "layout") {
 #' @inheritParams read_slide_placeholders
 #' @inheritParams rlang::args_error_context
 #'
+#' @return
+#' A tibble with columns describing the layout placeholders:
+#'   \item{layout_file}{character; basename of the layout file}
+#'   \item{layout_name}{character; name of the layout}
+#'   \item{id}{character; placeholder id}
+#'   \item{offx}{numeric; x offset in inches}
+#'   \item{offy}{numeric; y offset in inches}
+#'   \item{cx}{numeric; width in inches}
+#'   \item{cy}{numeric; height in inches}
+#'   \item{ph_type}{character; placeholder type}
+#'   \item{ph}{character; placeholder XML node as glue object}
+#'   \item{ph_id}{character; placeholder idx attribute}
+#'   \item{layout_ph_name}{character; placeholder name}
+#'
+#' The tibble has a \code{dimensions} attribute containing the slide size.
+#'
 #' @examples
 #'
 #' pptx <- example_pptx()
 #' read_layout_placeholders(pptx, layout = "Title Slide")
+#' 
 #'
 #' @export
 read_layout_placeholders <- function(pptx, layout, keep_all = FALSE, error_call = current_env()) {

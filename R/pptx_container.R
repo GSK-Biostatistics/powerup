@@ -4,7 +4,7 @@
 #' @param path output path of file to be saved
 #' @param name name of the file
 #'
-#' @inheritParams args_powerup
+#' @param pptx A PowerPoint wrapped in a <pptx_container> object. see [load_pptx()]
 #' @inheritParams rlang::args_error_context
 #'
 #' @return `load_pptx()` returns a new `pptx_container` object that wraps objects

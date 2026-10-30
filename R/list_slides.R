@@ -1,6 +1,6 @@
 #' List slides
 #'
-#' @inheritParams args_powerup
+#' @param pptx A PowerPoint wrapped in a <pptx_container> object. see [load_pptx()]
 #' @inheritParams rlang::args_error_context
 #' @param keep_all if FALSE, only keep non missing placeholders
 #'

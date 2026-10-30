@@ -29,6 +29,27 @@ running function, e.g. \code{caller_env()}. The function will be
 mentioned in error messages as the source of the error. See the
 \code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
+\value{
+A tibble with columns describing the placeholders:
+\item{slide_index}{numeric; slide index}
+\item{slide_file}{character; basename of the slide file}
+\item{layout_file}{character; basename of the layout file}
+\item{layout_name}{character; name of the layout}
+\item{id}{character; placeholder id}
+\item{offx}{numeric; x offset in inches}
+\item{offy}{numeric; y offset in inches}
+\item{cx}{numeric; width in inches}
+\item{cy}{numeric; height in inches}
+\item{ph_type}{character; placeholder type}
+\item{ph}{character; placeholder XML node as glue object}
+\item{ph_id}{character; placeholder idx attribute}
+\item{slide_ph_name}{character; placeholder name from slide}
+\item{slide_ph_id}{character; placeholder id from slide}
+\item{layout_ph_name}{character; placeholder name from layout}
+\item{metadata}{list; metadata extracted from placeholder}
+
+The tibble has a \code{dimensions} attribute containing the slide size.
+}
 \description{
 Read placeholders information from PowerPoint presentation
 }
