@@ -165,15 +165,15 @@ way</p></dd>
 <span class="r-in"><span><span class="co">## adding new slides</span></span></span>
 <span class="r-in"><span><span class="va">ppt</span> <span class="op">&lt;-</span> <span class="va">ppt</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="co">## add first slide with content in title</span></span></span>
-<span class="r-in"><span>  <span class="fu">add_slide</span><span class="op">(</span>layout <span class="op">=</span> <span class="st">"Title and Content"</span>, </span></span>
+<span class="r-in"><span>  <span class="fu">add_slide</span><span class="op">(</span>layout <span class="op">=</span> <span class="st">"Title and Content"</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="content.html">content</a></span><span class="op">(</span><span class="st">"hello world"</span>, ph <span class="op">=</span> <span class="fu"><a href="ph_templates.html">ph_title</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="co">## add another slide with nothing on it yet</span></span></span>
-<span class="r-in"><span>  <span class="fu">add_slide</span><span class="op">(</span>layout <span class="op">=</span> <span class="st">"Title and Content"</span><span class="op">)</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>  <span class="fu">add_slide</span><span class="op">(</span>layout <span class="op">=</span> <span class="st">"Title and Content"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="co">## slide added at index 2 with content in title and body</span></span></span>
-<span class="r-in"><span>  <span class="fu">add_slide</span><span class="op">(</span>layout <span class="op">=</span> <span class="st">"Title and Content"</span>, </span></span>
-<span class="r-in"><span>    index <span class="op">=</span> <span class="fl">2</span>, </span></span>
-<span class="r-in"><span>    <span class="fu"><a href="content.html">content</a></span><span class="op">(</span><span class="st">"Hello World"</span>, ph <span class="op">=</span> <span class="fu"><a href="ph_templates.html">ph_title</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>  <span class="fu">add_slide</span><span class="op">(</span>layout <span class="op">=</span> <span class="st">"Title and Content"</span>,</span></span>
+<span class="r-in"><span>    index <span class="op">=</span> <span class="fl">2</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="content.html">content</a></span><span class="op">(</span><span class="st">"Hello World"</span>, ph <span class="op">=</span> <span class="fu"><a href="ph_templates.html">ph_title</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="content.html">content</a></span><span class="op">(</span><span class="st">"This is a body"</span>, ph <span class="op">=</span> <span class="fu"><a href="ph_templates.html">ph_body</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> → powerup to add 1 content at slide 1.</span>
@@ -181,10 +181,10 @@ way</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> → powerup to add 2 contents at slide 2.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Successfully added content to placeholder <span style="color: #0000BB;">"Title 1"</span>.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Successfully added content to placeholder <span style="color: #0000BB;">"Content Placeholder 2"</span>.</span>
-<span class="r-in"><span> </span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## updating an existing slide wit new content</span></span></span>
 <span class="r-in"><span><span class="va">ppt</span> <span class="op">&lt;-</span> <span class="va">ppt</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>   <span class="fu">update_slide</span><span class="op">(</span>index <span class="op">=</span> <span class="fl">1</span>, </span></span>
+<span class="r-in"><span>   <span class="fu">update_slide</span><span class="op">(</span>index <span class="op">=</span> <span class="fl">1</span>,</span></span>
 <span class="r-in"><span>     <span class="fu"><a href="content.html">content</a></span><span class="op">(</span><span class="st">"This placeholder now has a value"</span>, ph <span class="op">=</span> <span class="fu"><a href="ph_templates.html">ph_body</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>   <span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> → powerup to add 1 content at slide 1.</span>

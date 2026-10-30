@@ -107,6 +107,60 @@ mentioned in error messages as the source of the error. See the
 <code>call</code> argument of <code><a href="https://rlang.r-lib.org/reference/abort.html" class="external-link">abort()</a></code> for more information.</p></dd>
 
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>A tibble with columns describing the placeholders:</p>
+<dl><dt>slide_index</dt>
+<dd><p>numeric; slide index</p></dd>
+
+<dt>slide_file</dt>
+<dd><p>character; basename of the slide file</p></dd>
+
+<dt>layout_file</dt>
+<dd><p>character; basename of the layout file</p></dd>
+
+<dt>layout_name</dt>
+<dd><p>character; name of the layout</p></dd>
+
+<dt>id</dt>
+<dd><p>character; placeholder id</p></dd>
+
+<dt>offx</dt>
+<dd><p>numeric; x offset in inches</p></dd>
+
+<dt>offy</dt>
+<dd><p>numeric; y offset in inches</p></dd>
+
+<dt>cx</dt>
+<dd><p>numeric; width in inches</p></dd>
+
+<dt>cy</dt>
+<dd><p>numeric; height in inches</p></dd>
+
+<dt>ph_type</dt>
+<dd><p>character; placeholder type</p></dd>
+
+<dt>ph</dt>
+<dd><p>character; placeholder XML node as glue object</p></dd>
+
+<dt>ph_id</dt>
+<dd><p>character; placeholder idx attribute</p></dd>
+
+<dt>slide_ph_name</dt>
+<dd><p>character; placeholder name from slide</p></dd>
+
+<dt>slide_ph_id</dt>
+<dd><p>character; placeholder id from slide</p></dd>
+
+<dt>layout_ph_name</dt>
+<dd><p>character; placeholder name from layout</p></dd>
+
+<dt>metadata</dt>
+<dd><p>list; metadata extracted from placeholder</p></dd>
+
+
+</dl><p>The tibble has a <code>dimensions</code> attribute containing the slide size.</p>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>

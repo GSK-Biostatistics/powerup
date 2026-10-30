@@ -97,6 +97,45 @@ mentioned in error messages as the source of the error. See the
 <code>call</code> argument of <code><a href="https://rlang.r-lib.org/reference/abort.html" class="external-link">abort()</a></code> for more information.</p></dd>
 
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>A tibble with columns describing the layout placeholders:</p>
+<dl><dt>layout_file</dt>
+<dd><p>character; basename of the layout file</p></dd>
+
+<dt>layout_name</dt>
+<dd><p>character; name of the layout</p></dd>
+
+<dt>id</dt>
+<dd><p>character; placeholder id</p></dd>
+
+<dt>offx</dt>
+<dd><p>numeric; x offset in inches</p></dd>
+
+<dt>offy</dt>
+<dd><p>numeric; y offset in inches</p></dd>
+
+<dt>cx</dt>
+<dd><p>numeric; width in inches</p></dd>
+
+<dt>cy</dt>
+<dd><p>numeric; height in inches</p></dd>
+
+<dt>ph_type</dt>
+<dd><p>character; placeholder type</p></dd>
+
+<dt>ph</dt>
+<dd><p>character; placeholder XML node as glue object</p></dd>
+
+<dt>ph_id</dt>
+<dd><p>character; placeholder idx attribute</p></dd>
+
+<dt>layout_ph_name</dt>
+<dd><p>character; placeholder name</p></dd>
+
+
+</dl><p>The tibble has a <code>dimensions</code> attribute containing the slide size.</p>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
@@ -112,6 +151,7 @@ mentioned in error messages as the source of the error. See the
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> slideLayout1.xml Title Slide     5  3.42  6.95  3.17 0.399 ftr     &lt;p:p… 11   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> slideLayout1.xml Title Slide     6  7.17  6.95  2.33 0.399 sldNum  &lt;p:p… 12   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: layout_ph_name &lt;chr&gt;</span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
