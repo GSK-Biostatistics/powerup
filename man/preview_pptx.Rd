@@ -2,29 +2,45 @@
 % Please edit documentation in R/preview_pptx.R
 \name{preview_pptx}
 \alias{preview_pptx}
-\title{Preview a powerup PPTX in the Viewer pane}
+\title{Preview a powerup PPTX}
 \usage{
-preview_pptx(pptx, slide = 1L, view = rlang::is_interactive())
+preview_pptx(
+  pptx,
+  slide = 1L,
+  view = rlang::is_interactive(),
+  launch.browser = getOption("powerup.launch.browser", FALSE),
+  width = "100\%",
+  height = "100\%"
+)
 }
 \arguments{
 \item{pptx}{A \code{pptx_container} object or a file path to a \code{.pptx} file.}
 
 \item{slide}{Integer. Which slide to show first (1-based). Default \code{1}.}
 
-\item{view}{Logical. If \code{TRUE} (default), opens the viewer. If \code{FALSE}, returns the html.}
+\item{view}{Logical. If \code{TRUE}, displays the widget (see \code{launch.browser}).
+If \code{FALSE}, only returns the widget. Defaults to \code{rlang::is_interactive()}.}
+
+\item{launch.browser}{Where to display the widget when \code{view = TRUE}. If
+\code{FALSE} (default), the IDE Viewer pane is used (falling back to the
+browser if there is no viewer). If \code{TRUE}, the system default browser is
+used. May also be a function taking a file path or URL, as in
+\code{\link[shiny:runApp]{shiny::runApp()}}. Defaults to \code{getOption("powerup.launch.browser", FALSE)}.}
+
+\item{width, height}{Widget width and height. Defaults to \code{"100\%"}}
 }
 \value{
-An \code{htmltools::browsable} HTML object (invisibly). Called for its
-side-effect of opening the viewer.
+A \code{pptx_preview} htmlwidget (invisibly when displayed).
 }
 \description{
 Renders a \code{pptx_container} (or a path to a \code{.pptx} file) as an interactive
-slide viewer in the RStudio / Positron Viewer pane, or in the default browser.
-Uses PptxViewJS (bundled offline; no internet connection required).
+slide viewer htmlwidget. Uses PptxViewJS (bundled offline; no internet
+connection required).
 }
 \examples{
 \dontrun{
 pptx <- example_pptx()
 preview_pptx(pptx)
+preview_pptx(pptx, launch.browser = TRUE)
 }
 }
