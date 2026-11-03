@@ -1,3 +1,8 @@
+# 0.3.2
+
+* `preview_pptx()` now returns an htmlwidget (class `pptx_preview`) instead of a browsable HTML object, and gains `launch.browser` (as in `shiny::runApp()`, also settable via `options(powerup.launch.browser)`), `width`, and `height` arguments
+* Add `preview_pptx_ui()` and `preview_pptx_render()` Shiny bindings for `preview_pptx()`
+
 # 0.3.1
 
 * Add `preview_pptx()` function to preview PowerPoint presentations in html using a modified version of PptxViewJS
