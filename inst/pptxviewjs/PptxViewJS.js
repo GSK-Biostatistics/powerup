@@ -2537,7 +2537,8 @@ Modified for previewing pptx documents based on bugs found
                                     g: 0,
                                     b: 0
                                 },
-                                highlight: r.properties?.highlight || null
+                                highlight: r.properties?.highlight || null,
+                                textBaseline: "middle"
                             };
                             t.fillText(r.text, e, n, o);
                             e += r.text.length * (.6 * o.fontSize)
@@ -4115,7 +4116,8 @@ Modified for previewing pptx documents based on bugs found
             if (t.m_oContext)
                 for (let e = 0; e < a.length; e++) {
                     const o = a[e];
-                    const i = h + o.lineHeight / 2;
+                    const maxFontSize = Math.max(...o.runSegments.map(e => e.fontSizePx));
+                    const i = h + o.lineHeight / 2 - maxFontSize * 0.2;
                     let n = 0;
                     t.m_oContext.save();
                     for (const e of o.runSegments) {
@@ -16162,7 +16164,15 @@ Modified for previewing pptx documents based on bugs found
                         const g = r.fontSize || 12;
                         const m = this.getTextScaleFactor();
                         const b = g * m;
-                        const x = y + .8 * b;
+                        let yOffset = .5 * b;
+                        // Check if any run in this line contains emoji
+                        if (i.runs) {
+                            const hasEmoji = i.runs.some(run => run.text && /[\p{Emoji}]/u.test(run.text));
+                            if (hasEmoji) {
+                                yOffset = .7 * b;
+                            }
+                        }
+                        const x = y + yOffset;
                         if (0 === e)
                             if (r.bullet && "none" !== r.bullet.type) {
                                 const e = l + n + u;
@@ -16391,7 +16401,7 @@ Modified for previewing pptx documents based on bugs found
                 const a = `"${n}", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif`;
                 e.font = `${s} ${i} ${o}px ${a}`;
                 e.fillStyle = this.graphics.colorToRgb(t.color);
-                e.textBaseline = "alphabetic";
+                e.textBaseline = "hanging";
                 t.scaledFontSize = o
             }
             getBulletWidth(t, e, r = 0, o = null) {

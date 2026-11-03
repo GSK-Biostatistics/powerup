@@ -1,6 +1,6 @@
 Package: powerup
 Title: Power Up Your PowerPoint Presentations
-Version: 0.3.1
+Version: 0.3.2
 Authors@R: c(
       person("Ellis", "Hughes", email = "ellis.h.hughes@gsk.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-0637-4436")), 
       person("Shannon", "Haughton", email = "shannon.l.haughton@gsk.com", role = "aut"),
@@ -29,6 +29,7 @@ Imports:
     glue,
     ggplot2,
     htmltools,
+    htmlwidgets,
     base64enc,
     shiny
 Suggests: 
