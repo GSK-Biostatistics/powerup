@@ -41,7 +41,7 @@ preview_pptx <- function(pptx, slide = 1L, view = rlang::is_interactive()) {
   pkg_js_dir  <- system.file("pptxviewjs", package = "powerup")
   jszip_js    <- readLines(file.path(pkg_js_dir, "jszip.min.js"),      warn = FALSE)
   chartjs_js  <- readLines(file.path(pkg_js_dir, "chart.umd.min.js"),  warn = FALSE)
-  viewer_js   <- readLines(file.path(pkg_js_dir, "PptxViewJS.min.js"), warn = FALSE)
+  viewer_js   <- readLines(file.path(pkg_js_dir, "PptxViewJS.js"), warn = FALSE)
 
   jszip_inline  <- paste(jszip_js,   collapse = "\n")
   chartjs_inline <- paste(chartjs_js, collapse = "\n")
@@ -201,7 +201,7 @@ preview_pptx <- function(pptx, slide = 1L, view = rlang::is_interactive()) {
     if (startSlide > 0) {
       try { await viewer.goToSlide(startSlide); } catch(e) {}  // goToSlide is 0-based
     }
-      
+
     await safeRender();
   });
 
@@ -236,6 +236,6 @@ preview_pptx <- function(pptx, slide = 1L, view = rlang::is_interactive()) {
   out <- htmltools::browsable(html)
   if (view) {
     print(out)
-  } 
+  }
   invisible(out)
 }
