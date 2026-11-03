@@ -14255,7 +14255,7 @@ Modified for previewing pptx documents based on bugs found
                             this.drawPictureShape(t, r);
                             break;
                         case "grpSp":
-                            this.drawGroupShape(t, r);
+                            await this.drawGroupShape(t, r);
                             break;
                         case "cxnSp":
                             this.drawConnectorShape(t, r);
@@ -14268,7 +14268,7 @@ Modified for previewing pptx documents based on bugs found
                     }
                 } catch (t) {}
             }
-            drawShapeGeometry(t, e) {
+            async drawShapeGeometry(t, e) {
                 if (!e || e.w <= 0 || e.h <= 0) return;
                 const r = this.getShapeFillColor(t);
                 const o = this.getShapeStrokeColor(t);
@@ -14291,7 +14291,13 @@ Modified for previewing pptx documents based on bugs found
                         this.drawPictureShape(t, e);
                         break;
                     case "grpSp":
-                        this.drawGroupShape(t, e);
+                        await this.drawGroupShape(t, e);
+                        break;
+                    case "cxnSp":
+                        this.drawConnectorShape(t, e);
+                        break;
+                    case "graphicFrame":
+                        await this.drawGraphicFrame(t, e);
                         break;
                     default:
                         this.drawDefaultShape(t, e)
@@ -14827,7 +14833,7 @@ Modified for previewing pptx documents based on bugs found
                 n.strokeRect(e, r, o, s);
                 n.restore()
             }
-            drawGroupShape(t, e) {
+            async drawGroupShape(t, e) {
                 if (!e || e.w <= 0 || e.h <= 0) return;
                 if (!this.graphics || !this.graphics.context) return;
                 this.graphics.SaveGrState();
@@ -14859,7 +14865,7 @@ Modified for previewing pptx documents based on bugs found
                             const r = e[t];
                             try {
                                 const t = this.getShapeBounds(r);
-                                if (t && t.w > 0 && t.h > 0) this.drawShapeGeometry(r, t)
+                                if (t && t.w > 0 && t.h > 0) await this.drawShapeGeometry(r, t)
                             } catch (t) {}
                         }
                     }
@@ -23999,7 +24005,7 @@ Modified for previewing pptx documents based on bugs found
                 for (let t = 0; t < r.length; t++) {
                     const o = r[t];
                     const s = o.tagName.toLowerCase();
-                    if ("sp" === s || "p:sp" === s || "pic" === s || "p:pic" === s || "grpsp" === s || "p:grpsp" === s || "cxnsp" === s || "p:cxnsp" === s) try {
+                    if ("sp" === s || "p:sp" === s || "pic" === s || "p:pic" === s || "grpsp" === s || "p:grpsp" === s || "cxnsp" === s || "p:cxnsp" === s || "graphicframe" === s || "p:graphicframe" === s) try {
                         const t = this.processShapeElement(o);
                         if (t) {
                             t.inGroup = true;
