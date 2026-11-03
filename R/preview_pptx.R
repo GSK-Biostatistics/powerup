@@ -1,30 +1,41 @@
-#' Preview a powerup PPTX in the Viewer pane
+#' Preview a powerup PPTX
 #'
 #' Renders a `pptx_container` (or a path to a `.pptx` file) as an interactive
-#' slide viewer in the RStudio / Positron Viewer pane, or in the default browser.
-#' Uses PptxViewJS (bundled offline; no internet connection required).
+#' slide viewer htmlwidget. Uses PptxViewJS (bundled offline; no internet
+#' connection required).
 #'
 #' @param pptx A `pptx_container` object or a file path to a `.pptx` file.
 #' @param slide Integer. Which slide to show first (1-based). Default `1`.
-#' @param view Logical. If `TRUE` (default), opens the viewer. If `FALSE`, returns the html.
+#' @param view Logical. If `TRUE`, displays the widget (see `launch.browser`).
+#'   If `FALSE`, only returns the widget. Defaults to `rlang::is_interactive()`.
+#' @param launch.browser Where to display the widget when `view = TRUE`. If
+#'   `FALSE` (default), the IDE Viewer pane is used (falling back to the
+#'   browser if there is no viewer). If `TRUE`, the system default browser is
+#'   used. May also be a function taking a file path or URL, as in
+#'   [shiny::runApp()]. Defaults to `getOption("powerup.launch.browser", FALSE)`.
+#' @param width,height Widget width and height. Defaults to `"100%"`
 #'
-#' @return An `htmltools::browsable` HTML object (invisibly). Called for its
-#'   side-effect of opening the viewer.
+#' @return A `pptx_preview` htmlwidget (invisibly when displayed).
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' pptx <- example_pptx()
 #' preview_pptx(pptx)
+#' preview_pptx(pptx, launch.browser = TRUE)
 #' }
-preview_pptx <- function(pptx, slide = 1L, view = rlang::is_interactive()) {
+preview_pptx <- function(pptx,
+                         slide = 1L,
+                         view = rlang::is_interactive(),
+                         launch.browser = getOption("powerup.launch.browser", FALSE),
+                         width = "100%",
+                         height = "100%") {
 
-  # Resolve to a file path
   if (inherits(pptx, "pptx_container")) {
-    tmp <- tempfile(fileext = ".pptx")
-    save_pptx(pptx, tmp)
-    pptx_path <- tmp
-  } else if (is.character(pptx) && file.exists(pptx)) {
+    pptx_path <- tempfile(fileext = ".pptx")
+    on.exit(unlink(pptx_path), add = TRUE)
+    save_pptx(pptx, pptx_path)
+  } else if (is.character(pptx) && length(pptx) == 1 && file.exists(pptx)) {
     pptx_path <- pptx
   } else {
     cli::cli_abort(
@@ -32,210 +43,148 @@ preview_pptx <- function(pptx, slide = 1L, view = rlang::is_interactive()) {
     )
   }
 
-  # Encode the PPTX as base64
-  raw_bytes <- readBin(pptx_path, what = "raw", n = file.info(pptx_path)$size)
-  b64 <- base64enc::base64encode(raw_bytes)
-  data_uri <- paste0("data:application/vnd.openxmlformats-officedocument.presentationml.presentation;base64,", b64)
+  if (!(is.logical(launch.browser) && length(launch.browser) == 1 && !is.na(launch.browser)) &&
+      !is.function(launch.browser)) {
+    cli::cli_abort("{.arg launch.browser} must be `TRUE`, `FALSE`, or a function.")
+  }
 
-  # Paths to bundled JS (Chart.js must load before PptxViewJS)
-  pkg_js_dir  <- system.file("pptxviewjs", package = "powerup")
-  jszip_js    <- readLines(file.path(pkg_js_dir, "jszip.min.js"),      warn = FALSE)
-  chartjs_js  <- readLines(file.path(pkg_js_dir, "chart.umd.min.js"),  warn = FALSE)
-  viewer_js   <- readLines(file.path(pkg_js_dir, "PptxViewJS.js"), warn = FALSE)
-
-  jszip_inline  <- paste(jszip_js,   collapse = "\n")
-  chartjs_inline <- paste(chartjs_js, collapse = "\n")
-  viewer_inline <- paste(viewer_js,  collapse = "\n")
+  b64 <- base64enc::base64encode(pptx_path)
 
   # Read true slide dimensions for correct aspect ratio
   rpptx <- officer::read_pptx(pptx_path)
   slide_dims <- officer::slide_size(rpptx)
-  aspect_ratio <- slide_dims$width / slide_dims$height
-
   n_slides <- length(rpptx)
-  if(slide < 1 || slide > n_slides) {
-    cli::cli_abort(
-      "{.arg slide} must be between 1 and {n_slides}."
+  if (slide < 1 || slide > n_slides) {
+    cli::cli_abort("{.arg slide} must be between 1 and {n_slides}.")
+  }
+
+  widget <- htmlwidgets::createWidget(
+    name = "pptx_preview",
+    x = list(
+      data   = b64,
+      aspect = slide_dims$width / slide_dims$height,
+      slide  = as.integer(slide) - 1L  # 0-based for JS
+    ),
+    width = width,
+    height = height,
+    package = "powerup",
+    sizingPolicy = htmlwidgets::sizingPolicy(
+      defaultWidth = "100%",
+      defaultHeight = "100%",
+      viewer.fill = TRUE,
+      browser.fill = TRUE,
+      padding = 0
+    ),
+    # Load order matters: JSZip and Chart.js before PptxViewJS
+    dependencies = list(
+      pptx_dep("jszip", "jszip.min.js"),
+      pptx_dep("chartjs", "chart.umd.min.js"),
+      pptx_dep("pptxviewjs", "PptxViewJS.js"),
+      htmltools::htmlDependency(
+        name = "pptx-preview-style",
+        version = "1.0.0",
+        src = system.file("htmlwidgets", package = "powerup"),
+        stylesheet = "pptx_preview.css"
+      )
     )
-  }
-  initial_slide <- as.integer(slide) - 1L  # 0-based for JS
+  )
 
-  # Build HTML via paste0 - avoids sprintf misinterpreting '%' chars in minified JS
-  html <- htmltools::HTML(paste0(
-    '<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PPTX Preview</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, sans-serif; background: #1a1a2e; color: #eee;
-           display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-    #toolbar {
-      display: flex; align-items: center; gap: 8px; padding: 6px 12px;
-      background: #16213e; border-bottom: 1px solid #0f3460; flex-shrink: 0;
-    }
-    button {
-      background: #0f3460; color: #eee; border: none; border-radius: 4px;
-      padding: 4px 12px; cursor: pointer; font-size: 13px;
-    }
-    button:hover { background: #533483; }
-    button:disabled { opacity: 0.4; cursor: default; }
-    #slide-info { font-size: 13px; min-width: 80px; text-align: center; }
-    #canvas-wrap {
-      flex: 1; display: flex; align-items: center; justify-content: center;
-      overflow: hidden; padding: 12px;
-    }
-    canvas { box-shadow: 0 4px 24px rgba(0,0,0,0.5); background: white; display: block; }
-    #status { font-size: 12px; color: #aaa; }
-  </style>
-</head>
-<body>
-
-<div id="toolbar">
-  <button id="btn-prev" disabled>&#8592; Prev</button>
-  <span id="slide-info">Loading...</span>
-  <button id="btn-next" disabled>Next &#8594;</button>
-  <span id="status"></span>
-</div>
-
-<div id="canvas-wrap">
-  <canvas id="pptx-canvas"></canvas>
-</div>
-
-<!-- Bundled JSZip -->
-<script>', jszip_inline, '</script>
-<!-- Bundled Chart.js (required peer dep for PptxViewJS) -->
-<script>', chartjs_inline, '</script>
-<!-- Bundled PptxViewJS -->
-<script>', viewer_inline, '</script>
-
-<script>
-(async function () {
-  const canvas   = document.getElementById("pptx-canvas");
-  const info     = document.getElementById("slide-info");
-  const status   = document.getElementById("status");
-  const btnPrev  = document.getElementById("btn-prev");
-  const btnNext  = document.getElementById("btn-next");
-
-  // Size canvas to fill the container using the true slide aspect ratio.
-  // Must set both the canvas pixel dimensions (width/height attributes) AND
-  // the CSS display size - they are independent. The pixel dimensions control
-  // what PptxViewJS actually renders into; CSS controls how it is displayed.
-  const ASPECT = ', aspect_ratio, ';
-  function resizeCanvas() {
-    const wrap   = document.getElementById("canvas-wrap");
-    const pad    = 24;
-    const availW = wrap.clientWidth  - pad;
-    const availH = wrap.clientHeight - pad;
-    let w = availW;
-    let h = w / ASPECT;
-    if (h > availH) { h = availH; w = h * ASPECT; }
-    w = Math.floor(w);
-    h = Math.floor(h);
-    // Pixel buffer dimensions (what the renderer draws into)
-    canvas.width  = w;
-    canvas.height = h;
-    // CSS display dimensions (how it appears on screen)
-    canvas.style.width  = w + "px";
-    canvas.style.height = h + "px";
-  }
-  resizeCanvas();
-  let _resizeTimer;
-  window.addEventListener("resize", () => {
-    resizeCanvas();
-    clearTimeout(_resizeTimer);
-    _resizeTimer = setTimeout(async () => { await safeRender(); }, 100);
-  });
-
-  // Decode the embedded base64 PPTX
-  const dataUri = "', data_uri, '";
-  const base64  = dataUri.split(",")[1];
-  const binary  = atob(base64);
-  const bytes   = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  const blob = new Blob([bytes],
-    { type: "application/vnd.openxmlformats-officedocument.presentationml.presentation" });
-  const file = new File([blob], "presentation.pptx", { type: blob.type });
-
-  const viewer = new PptxViewJS.PPTXViewer({ canvas });
-
-  // Safely render the current slide - empty slides can throw, so we catch and
-  // clear the canvas instead of letting the error break navigation entirely.
-  async function safeRender() {
-    try {
-      await viewer.render();
-    } catch (e) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#f8f8f8";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#aaa";
-        ctx.font = "16px system-ui, sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("(empty slide)", canvas.width / 2, canvas.height / 2);
-      }
-    }
-    updateNav();
-  }
-
-  function updateNav() {
-    // getCurrentSlideIndex() is 0-based; convert to 1-based for display/logic
-    const cur0  = viewer.getCurrentSlideIndex();  // 0-based
-    const cur   = cur0 + 1;                       // 1-based for display
-    const total = viewer.getSlideCount() || 1;
-    info.textContent = "Slide " + cur + " / " + total;
-    btnPrev.disabled = cur <= 1;
-    btnNext.disabled = cur >= total;
-  }
-
-  viewer.on("loadComplete", async (data) => {
-    const total = data.slideCount;
-    status.textContent = total + " slide" + (total !== 1 ? "s" : "");
-    // Render first, then navigate to the requested start slide if needed.
-    // goToSlide alone does not render; safeRender() must follow it.
-    const startSlide = Math.min(', initial_slide, ', total - 1);  // 0-based
-    if (startSlide > 0) {
-      try { await viewer.goToSlide(startSlide); } catch(e) {}  // goToSlide is 0-based
-    }
-
-    await safeRender();
-  });
-
-  btnPrev.addEventListener("click", async () => {
-    try { await viewer.previousSlide(); } catch(e) {}
-    await safeRender();
-  });
-  btnNext.addEventListener("click", async () => {
-    try { await viewer.nextSlide(); } catch(e) {}
-    await safeRender();
-  });
-
-  document.addEventListener("keydown", async (e) => {
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-      try { await viewer.nextSlide(); } catch(e) {}
-      await safeRender();
-    }
-    if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-      try { await viewer.previousSlide(); } catch(e) {}
-      await safeRender();
-    }
-  });
-
-  await viewer.loadFile(file);
-
-})();
-</script>
-</body>
-</html>'
-  ))
-
-  out <- htmltools::browsable(html)
   if (view) {
-    print(out)
+    display_widget(widget, launch.browser)
+    return(invisible(widget))
   }
-  invisible(out)
+  widget
+}
+
+#' Shiny bindings for preview_pptx
+#'
+#' Output and render functions for using [preview_pptx()] in Shiny apps and
+#' R Markdown documents. Inside `preview_pptx_render()` call
+#' `preview_pptx(..., view = FALSE)` so the widget is returned rather than
+#' opened in the Viewer.
+#'
+#' @param outputId Output variable to read from.
+#' @param width,height Must be a valid CSS unit (like `"100%"`, `"400px"`,
+#'   `"auto"`) or a number, which will be coerced to a string and have `"px"`
+#'   appended.
+#' @param expr An expression that returns a [preview_pptx()] widget.
+#' @param env The environment in which to evaluate `expr`.
+#' @param quoted Is `expr` a quoted expression (with `quote()`)? Default `FALSE`.
+#'
+#' @return `preview_pptx_ui()` returns a Shiny output element;
+#'   `preview_pptx_render()` returns a Shiny render function.
+#' @name pptx_preview-shiny
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' library(shiny)
+#'
+#' ui <- fluidPage(
+#'   numericInput("slide", "Start slide", value = 1, min = 1),
+#'   preview_pptx_ui("preview", height = "500px")
+#' )
+#'
+#' server <- function(input, output, session) {
+#'   output$preview <- preview_pptx_render({
+#'     preview_pptx(example_pptx(), slide = input$slide, view = FALSE)
+#'   })
+#' }
+#'
+#' shinyApp(ui, server)
+#' }
+preview_pptx_ui <- function(outputId, width = "100%", height = "600px") {
+  htmlwidgets::shinyWidgetOutput(
+    outputId, "pptx_preview", width, height, package = "powerup"
+  )
+}
+
+#' @rdname pptx_preview-shiny
+#' @export
+preview_pptx_render <- function(expr, env = parent.frame(), quoted = FALSE) {
+  if (!quoted) {
+    expr <- substitute(expr)
+  }
+  htmlwidgets::shinyRenderWidget(expr, preview_pptx_ui, env, quoted = TRUE)
+}
+
+pptx_dep <- function(name, script) {
+  htmltools::htmlDependency(
+    name = name,
+    version = "1.0.0",
+    src = system.file("pptxviewjs", package = "powerup"),
+    script = script
+  )
+}
+
+# Mirrors shiny::runApp(): TRUE = browser, FALSE = viewer, function = custom
+display_widget <- function(widget, launch.browser) {
+  if (is.function(launch.browser)) {
+    viewer <- launch.browser
+  } else if (isTRUE(launch.browser)) {
+    viewer <- utils::browseURL
+  } else {
+    viewer <- getOption("viewer", utils::browseURL)
+  }
+
+  html_file <- tempfile(fileext = ".html")
+  
+  # Wrap widget with full-height HTML structure for browsers
+  html_content <- htmltools::tagList(
+    htmltools::tags$html(
+      htmltools::tags$head(
+        htmltools::tags$meta(charset = "UTF-8"),
+        htmltools::tags$meta(name = "viewport", content = "width=device-width, initial-scale=1.0"),
+        htmltools::tags$style(htmltools::HTML("
+          html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+          body { display: flex; flex-direction: column; }
+        "))
+      ),
+      htmltools::tags$body(widget)
+    )
+  )
+  
+  htmltools::save_html(html_content, file = html_file)
+  viewer(html_file)
+  invisible(html_file)
 }
