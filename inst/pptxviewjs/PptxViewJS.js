@@ -6,6 +6,8 @@ https://cdn.jsdelivr.net/npm/pptxviewjs/dist/PptxViewJS.min.js
 Modified for previewing pptx documents based on bugs found
 - remove showing shapes not existing on a slide
 - corrected the application of bullets to text boxes
+- group shapes (p:grpSp): children are positioned via chOff/chExt/off/ext
+  (ECMA-376 20.1.7.6), composed for nested groups
 */
 
 ! function(t, e) {
@@ -17007,6 +17009,57 @@ Modified for previewing pptx documents based on bugs found
                 return null
             }
             getShapeBounds(t) {
+                // Group children (and groups) carry slide-space bounds already mapped through
+                // chOff/chExt; the raw xfrm on spPr/properties is in child space.
+                if (t && t.bounds && (t.inGroup || "grpSp" === t.type)) {
+                    const b = t.bounds;
+                    const bx = b.l || 0,
+                        by = b.t || 0,
+                        bw = (b.r || 0) - bx,
+                        bh = (b.b || 0) - by;
+                    if (this.coordinateSystem && this.graphics && this.graphics.context) {
+                        const {
+                            slideWidthEMU: sw,
+                            slideHeightEMU: sh
+                        } = this.coordinateSystem;
+                        const W = sw || 9144e3;
+                        const H = sh || 6858e3;
+                        const cv = this.graphics.context.canvas;
+                        let cw, ch;
+                        if (cv.style.width && cv.style.height) {
+                            cw = parseFloat(cv.style.width);
+                            ch = parseFloat(cv.style.height)
+                        } else {
+                            cw = cv.width / (window.devicePixelRatio || 1);
+                            ch = cv.height / (window.devicePixelRatio || 1)
+                        }
+                        let pw, ph, ox, oy;
+                        if (W / H > cw / ch) {
+                            pw = cw;
+                            ph = cw / (W / H);
+                            ox = 0;
+                            oy = (ch - ph) / 2
+                        } else {
+                            pw = ch * (W / H);
+                            ph = ch;
+                            ox = (cw - pw) / 2;
+                            oy = 0
+                        }
+                        return {
+                            x: Math.round(ox + bx / W * pw),
+                            y: Math.round(oy + by / H * ph),
+                            w: Math.round(bw / W * pw),
+                            h: Math.round(bh / H * ph)
+                        }
+                    }
+                    const px = v => v / 914400 * 96;
+                    return {
+                        x: px(bx),
+                        y: px(by),
+                        w: px(bw),
+                        h: px(bh)
+                    }
+                }
                 if (t && "graphicFrame" === t.type && t.position) {
                     const e = t.position;
                     const r = e.x || 0;
@@ -23591,7 +23644,8 @@ Modified for previewing pptx documents based on bugs found
                             if (r);
                         })
                     }
-                    const e = t.querySelector("spPr, p\\:spPr");
+                    // For groups, querySelector would pick up a descendant's spPr (child space)
+                    const e = "grpSp" === r.type ? null : t.querySelector("spPr, p\\:spPr");
                     if (e) {
                         const t = this.processShapeProperties(e);
                         if (t.transform && !r.properties?.transform) {
@@ -24152,6 +24206,23 @@ Modified for previewing pptx documents based on bugs found
                 scaleY: i,
                 offsetX: r.groupOff.x - r.chOff.x * s,
                 offsetY: r.groupOff.y - r.chOff.y * i
+            };
+            // Compose for nested groups: descendants were mapped into this child's parent
+            // space only, so apply the outer mapping to them as well.
+            if (t.shapeTree && t.shapeTree.length) this.applyGroupMappingToDescendants(t.shapeTree, r, s, i)
+        }
+        applyGroupMappingToDescendants(t, e, r, o) {
+            for (const s of t) {
+                if (s.bounds) {
+                    const t = s.bounds;
+                    s.bounds = {
+                        l: e.groupOff.x + (t.l - e.chOff.x) * r,
+                        t: e.groupOff.y + (t.t - e.chOff.y) * o,
+                        r: e.groupOff.x + (t.r - e.chOff.x) * r,
+                        b: e.groupOff.y + (t.b - e.chOff.y) * o
+                    }
+                }
+                if (s.shapeTree && s.shapeTree.length) this.applyGroupMappingToDescendants(s.shapeTree, e, r, o)
             }
         }
         calculateGroupBounds(t) {

@@ -2,6 +2,7 @@
 
 * `preview_pptx()` now returns an htmlwidget (class `pptx_preview`) instead of a browsable HTML object, and gains `launch.browser` (as in `shiny::runApp()`, also settable via `options(powerup.launch.browser)`), `width`, and `height` arguments
 * Add `preview_pptx_ui()` and `preview_pptx_render()` Shiny bindings for `preview_pptx()`
+* Patch bundled PptxViewJS so `preview_pptx()` positions children of group shapes (`p:grpSp`, e.g. `rvg::dml_pptx()` figures) using the group `off`/`ext`/`chOff`/`chExt` transform, including nested groups
 
 # 0.3.1
 
