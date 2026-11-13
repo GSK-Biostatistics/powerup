@@ -4,10 +4,25 @@
       pptx <- add_slide(add_slide(pptx, layout = "Title Slide", content("Title", ph = ph_title()),
       content("Subtitle", ph = ph_subtitle())), layout = "Comparison", content("left",
         ph = ph_body_left()), content("right", ph = ph_body_right()))
+    Condition
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
     Message
       > powerup to add 2 contents at slide 1.
       v Successfully added content to placeholder "Title 1".
       v Successfully added content to placeholder "Subtitle 2".
+    Condition
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
+    Message
       > powerup to add 2 contents at slide 2.
       v Successfully added content to placeholder "Content Placeholder 3".
       v Successfully added content to placeholder "Content Placeholder 5".
@@ -37,6 +52,13 @@
     Code
       pptx <- add_slide(pptx, layout = "Title Slide", content("Title", ph = ph_title()),
       content("Subtitle", ph = ph_subtitle()))
+    Condition
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
     Message
       > powerup to add 2 contents at slide 1.
       v Successfully added content to placeholder "Title 1".
@@ -46,6 +68,10 @@
 
     Code
       pptx <- add_slide(pptx, layout = "Title Slide", content(foo, ph = ph_title()))
+    Condition
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
     Message
       > powerup to add 1 content at slide 2.
       x Failed to polish content of class <foo> for slide 2.
@@ -60,6 +86,9 @@
     Code
       pptx <- add_slide(pptx, layout = "Title Slide", content(foo, ph = ph_body()))
     Condition
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
       Error in `add_slide()`:
       ! Failed to add slide 1.
       Caused by error in `add_slide()`:
@@ -72,6 +101,9 @@
       pptx <- add_slide(pptx, layout = "Title Slide", content(foo, ph = ph_body()),
       content(1, ph = ph_body()))
     Condition
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
       Error in `add_slide()`:
       ! Failed to add slide 1.
       Caused by error in `add_slide()`:
@@ -84,6 +116,12 @@
       pptx <- add_slide(pptx, layout = "Title Slide", content(1, ph = ph_body()),
       content(foo, ph = ph_body()))
     Condition
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
       Error in `add_slide()`:
       ! Failed to add slide 1.
       Caused by error in `add_slide()`:
@@ -161,6 +199,9 @@
       pptx <- add_slide(pptx, index = 1, layout = "Title and Content", content(
         BAD_CONTENT, ph = ph_body()), polish_error_continue = TRUE)
     Condition
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
       Error in `add_slide()`:
       ! Failed to add slide 1.
       Caused by error in `add_slide()`:
@@ -172,4 +213,8 @@
     Code
       pptx <- add_slide(pptx, index = 1, layout = "Title and Content", content(rnorm,
         ph = ph_body()), polish_error_continue = TRUE)
+    Condition
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
 

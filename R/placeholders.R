@@ -100,33 +100,47 @@ ref_placeholder <- function(
 #' @param x_offset `x` offset in centimeters (cm), inches (in), or percent(in) of slide width
 #' @param y_offset `y` offset in centimeters, inches, or percent of slide height
 #' @param width Width in centimeters, inches, or percent of slide width
-#' @param height Height in centimeters, inches, or percent of slide height
+#' @param height Height in centimeters, inches, or percent of slide height,
+#' @param ... Additional arguments (currently unused)
+#' @param units default units for the offsets and dimensions. Can be "in" (inches),
+#'  "cm" (centimeters), or "%" (percent of slide width/height). Units are inferred 
+#'  from the input values, but this is the default if no units are specified.
 #' @inheritParams rlang::args_error_context
 #'
 #' @rdname placeholder
 #'
 #' @export
 new_placeholder <- function(
-    type = c("body", "title", "ctrTitle", "ftr", "subTitle", "tbl", "chart","img"),
     x_offset = "10%",
     y_offset = "20%",
     width = "80%",
     height = "60%",
     label = "",
+    ...,
+    units = "in",
     error_call = current_env()
     ){
+  
+  # soft-deprecate type
+  if ("type" %in% names(list(...))) {
+    lifecycle::deprecate_soft(
+      when = "0.4.0",
+      what = "new_placeholder(type)",
+      details = "The `type` argument is no longer used in `new_placeholder()`."
+    )
+  }
 
-  type <- arg_match(type, error_call = error_call)
+  units <- arg_match(units, c("%", "in", "cm"), error_call = error_call)
   stopifnot(is.character(label))
 
   structure(
     list(
       label    = label,
-      type     = type,
-      offx     = check_ph_units(x_offset),
-      offy     = check_ph_units(y_offset),
-      cx       = check_ph_units(width),
-      cy       = check_ph_units(height)
+      type     = "body", ## unused now, so just setting a default value
+      offx     = check_ph_units(x_offset, ref_units = units, error_call = error_call),
+      offy     = check_ph_units(y_offset, ref_units = units, error_call = error_call),
+      cx       = check_ph_units(width, ref_units = units, error_call = error_call),
+      cy       = check_ph_units(height, ref_units = units, error_call = error_call)
     ),
     class = c("new_placeholder","placeholder")
   )
@@ -137,17 +151,25 @@ new_placeholder <- function(
 #' value.
 #'
 #' @noRd
-check_ph_units <- function(x, error_call = caller_env(), name = deparse(substitute(x))){
+check_ph_units <- function(x, ref_units = c("%", "in", "cm"), error_call = caller_env(), name = deparse(substitute(x))){
+  
   if (is.null(x)){
     cli_abort("Units for {.arg {name}} cannot be `NULL`.", call = error_call)
   }
 
+  ## check that the units are valid and convert to inches if needed
   rx <- "^(\\d*(?:[.]\\d+)*)(%|in|cm)$"
   if (!grepl(rx, x)) {
-    cli_abort(c(
-      "Invalid value for {.arg {name}} unit: {.val {x}}.",
-      i = "Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted."
-      ), call = error_call)
+    ## if no units are provided, use the ref_units to determine what to assume
+    if(grepl("^\\d+(?:[.]\\d+)*$", x)){
+      x <- paste0(x, ref_units)
+    } else {
+      ## if entry is not just numbers and ref_units are not provided, throw an error
+      cli_abort(c(
+        "Invalid value for {.arg {name}} unit: {.val {x}}.",
+        i = "Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted, or a numeric value with no units (which will be assumed to be {.val {ref_units}})."
+        ), call = error_call)
+    }
   }
 
   unit <- gsub(rx, "\\2", x)
@@ -213,9 +235,13 @@ get_selection_pane_xfrm <- function(
 
   label_from <- arg_match(label_from, multiple = TRUE, error_call = error_call)
   label_match <- arg_match(label_match, error_call = error_call)
+  
 
   xfrm_data <- read_one_slide_placeholders(pptx, index = index, error_call = error_call)
-  layout_type_ph_xfrm_data <- filter_xfrm_data(xfrm_data, ref_ph_type = type, error_call = error_call)
+
+  ## type is no longer able to be sued for filtering, so just passing the xfrm_data through
+  # layout_type_ph_xfrm_data <- filter_xfrm_data(xfrm_data, ref_ph_type = type, error_call = error_call)
+  layout_type_ph_xfrm_data <- xfrm_data
 
   layout_type_label_ph_xfrm_data <- vector("list", length = length(label_from))
   names(layout_type_label_ph_xfrm_data) <- label_from

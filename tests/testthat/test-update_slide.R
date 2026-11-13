@@ -226,7 +226,7 @@ test_that("add a piece of content and then replace it", {
     xml_find_all(paste0("p:cSld/p:spTree/*[*/p:cNvPr[@id='",new_phs$slide_ph_id,"']]")) |>
     xml_find_all(".//p:ph") |>
     as.character()
-  expect_equal(updated_old_content_ph, "<p:ph type=\"title\"/>")
+  expect_equal(updated_old_content_ph, "<p:ph type=\"body\"/>")
 
 
 })
@@ -248,7 +248,7 @@ test_that("add a piece of content (String) and then replace it with some differe
     xml_find_all(".//p:ph") |>
     as.character()
 
-  expect_equal(old_content_ph, "<p:ph type=\"title\"/>")
+  expect_equal(old_content_ph, "<p:ph type=\"body\"/>")
 
   pptx <- pptx |>
     update_slide(

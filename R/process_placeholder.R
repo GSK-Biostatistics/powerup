@@ -8,14 +8,14 @@ make_ph_shape <- function(ph, pptx){
     ph$slide_ph_name
   )
 
-  ph_loc <- officer::ph_location(
+  ph_loc <- suppressWarnings({officer::ph_location(
     newlabel = label,
     type     = ph$type,
     left     = ph$offx,
     top      = ph$offy,
     width    = ph$cx,
     height   = ph$cy
-  )
+  )})
 
   ## post-process ph
   type_col <- ifelse("type" %in% names(ph),"type","ph_type")

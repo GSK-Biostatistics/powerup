@@ -33,6 +33,9 @@
     Code
       check_powerup_content(content(1, ph_body()), mtcars)
     Condition
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
       Error:
       ! All elements of `...` must be marked as powerup content.
       x Element at position 2 is a data frame.
@@ -43,6 +46,9 @@
     Code
       content(metadata = c("foo", "bar"))
     Condition
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
       Error in `check_metadata()`:
       ! `metadata` must be a named character vector.
 
@@ -51,6 +57,9 @@
     Code
       content(metadata = c(foo = 42))
     Condition
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
       Error in `check_metadata()`:
       ! `metadata` must be a named character vector.
 

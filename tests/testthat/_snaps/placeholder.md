@@ -35,8 +35,27 @@
     Code
       new_placeholder(label = "label", type = "foo")
     Condition
+      Warning:
+      The `type` argument of `new_placeholder()` is deprecated as of powerup 0.4.0.
+      i The `type` argument is no longer used in `new_placeholder()`.
+    Message
+      -- new placeholder with settings:  ---------------------------------------------
+    Output
+      List of 6
+       $ label: chr "label"
+       $ type : chr "body"
+       $ offx : chr "10%"
+       $ offy : chr "20%"
+       $ cx   : chr "80%"
+       $ cy   : chr "60%"
+
+---
+
+    Code
+      new_placeholder(label = "label", units = "foo")
+    Condition
       Error in `new_placeholder()`:
-      ! `type` must be one of "body", "title", "ctrTitle", "ftr", "subTitle", "tbl", "chart", or "img", not "foo".
+      ! `units` must be one of "%", "in", or "cm", not "foo".
 
 # new_placeholder() checks units
 
@@ -45,7 +64,7 @@
     Condition
       Error in `new_placeholder()`:
       ! Invalid value for `x_offset` unit: "foo".
-      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted.
+      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted, or a numeric value with no units (which will be assumed to be "in").
 
 ---
 
@@ -63,7 +82,7 @@
     Condition
       Error in `new_placeholder()`:
       ! Invalid value for `y_offset` unit: "foo".
-      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted.
+      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted, or a numeric value with no units (which will be assumed to be "in").
 
 ---
 
@@ -72,7 +91,7 @@
     Condition
       Error in `new_placeholder()`:
       ! Invalid value for `width` unit: "foo".
-      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted.
+      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted, or a numeric value with no units (which will be assumed to be "in").
 
 ---
 
@@ -81,5 +100,21 @@
     Condition
       Error in `new_placeholder()`:
       ! Invalid value for `height` unit: "foo".
-      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted.
+      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted, or a numeric value with no units (which will be assumed to be "in").
+
+---
+
+    Code
+      new_placeholder(label = "label", height = "10", units = "foo")
+    Condition
+      Error in `new_placeholder()`:
+      ! `units` must be one of "%", "in", or "cm", not "foo".
+
+---
+
+    Code
+      new_placeholder(label = "label", height = 10, units = "foo")
+    Condition
+      Error in `new_placeholder()`:
+      ! `units` must be one of "%", "in", or "cm", not "foo".
 
