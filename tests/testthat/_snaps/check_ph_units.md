@@ -13,7 +13,7 @@
     Condition
       Error in `check()`:
       ! Invalid value for `x` unit: "-5".
-      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted.
+      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted, or a numeric value with no units (which will be assumed to be "%", "in", and "cm").
 
 ---
 
@@ -22,7 +22,7 @@
     Condition
       Error in `check()`:
       ! Invalid value for `x` unit: "-5%".
-      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted.
+      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted, or a numeric value with no units (which will be assumed to be "%", "in", and "cm").
 
 ---
 
@@ -40,7 +40,7 @@
     Condition
       Error in `check()`:
       ! Invalid value for `x` unit: "-5cm".
-      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted.
+      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted, or a numeric value with no units (which will be assumed to be "%", "in", and "cm").
 
 ---
 
@@ -49,7 +49,7 @@
     Condition
       Error in `check()`:
       ! Invalid value for `x` unit: "-5in".
-      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted.
+      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted, or a numeric value with no units (which will be assumed to be "%", "in", and "cm").
 
 ---
 
@@ -58,7 +58,7 @@
     Condition
       Error in `check()`:
       ! Invalid value for `x` unit: "4inch".
-      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted.
+      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted, or a numeric value with no units (which will be assumed to be "%", "in", and "cm").
 
 ---
 
@@ -67,5 +67,5 @@
     Condition
       Error in `check()`:
       ! Invalid value for `x` unit: "4c".
-      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted.
+      i Only `%` (percent), `cm` (centimeters), or `in` (inches) are accepted, or a numeric value with no units (which will be assumed to be "%", "in", and "cm").
 

@@ -14,4 +14,9 @@ test_that("check_ph_units()", {
   expect_equal(check_ph_units("50%"), "50%")
   expect_equal(check_ph_units("3cm"), as.character(to_inch(3)))
   expect_equal(check_ph_units("3in"), "3")
+
+  expect_equal(check_ph_units("50", ref_units = "%"), "50%")
+  expect_equal(check_ph_units("3", ref_units = "cm"), as.character(to_inch(3)))
+  expect_equal(check_ph_units("3", ref_units = "in"), "3")
+  
 })

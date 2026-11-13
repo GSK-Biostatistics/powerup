@@ -16,12 +16,13 @@ ref_placeholder(
 )
 
 new_placeholder(
-  type = c("body", "title", "ctrTitle", "ftr", "subTitle", "tbl", "chart", "img"),
   x_offset = "10\%",
   y_offset = "20\%",
   width = "80\%",
   height = "60\%",
   label = "",
+  ...,
+  units = "in",
   error_call = current_env()
 )
 }
@@ -63,7 +64,13 @@ mentioned in error messages as the source of the error. See the
 
 \item{width}{Width in centimeters, inches, or percent of slide width}
 
-\item{height}{Height in centimeters, inches, or percent of slide height}
+\item{height}{Height in centimeters, inches, or percent of slide height,}
+
+\item{...}{Additional arguments (currently unused)}
+
+\item{units}{default units for the offsets and dimensions. Can be "in" (inches),
+"cm" (centimeters), or "\%" (percent of slide width/height). Units are inferred
+from the input values, but this is the default if no units are specified.}
 }
 \value{
 A placeholder object
